@@ -4,7 +4,7 @@ package me.archdev.restapi.models.db
 import me.archdev.restapi.models.MovieSession
 import me.archdev.restapi.utils.DatabaseConfig
 
-trait MovieSessionTable extends DatabaseConfig {
+trait MovieSessionTable extends MovieTable with DatabaseConfig {
 
   import driver.api._
 

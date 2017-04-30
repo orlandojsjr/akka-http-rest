@@ -13,10 +13,10 @@ trait MovieSessionsServiceRoute extends MovieSessionsService with BaseServiceRou
 
   import StatusCodes._
 
-  val movieSessionsRoute = pathPrefix("movies" / "[a-zA-Z0-9]*".r / "sessions") { movieId =>
+  val movieSessionsRoute = pathPrefix("movies" / "[a-zA-Z0-9]*".r / "sessions") { imdbid =>
     pathEndOrSingleSlash {
       get {
-        complete(getSessions(movieId).map(_.toJson))
+        complete(getSessions(imdbid).map(_.toJson))
       } ~
         post {
            entity(as[MovieSessionRequest]) { session =>
@@ -24,15 +24,15 @@ trait MovieSessionsServiceRoute extends MovieSessionsService with BaseServiceRou
            }
         } 
     } ~ 
-    pathPrefix("[a-zA-Z0-9]*".r) { sessionId =>
+    pathPrefix("[_a-zA-Z0-9]*".r) { screenId =>
       get {
-          complete(getMovieSessionById(sessionId))
+          complete(getMovieSessionsBy(screenId, imdbid))
       } ~
-        pathPrefix("reservation") { 
+        pathPrefix("reserve") { 
           pathEndOrSingleSlash { 
             post {
-              entity(as[ReserveSeat]) { session =>
-                complete(reserveSeat(session).map(_.toJson))
+              entity(as[Reserve]) { reserve =>
+                complete(reserveSeat(reserve).map(_.toJson))
               }
             }
           }

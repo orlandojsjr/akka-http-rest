@@ -8,4 +8,4 @@ case class MovieSession(id: Option[Long] = None, screenId: String, imdbid: Strin
   def thereIsAvailableSeat: Boolean = availableSeats > reservedSeats
 }
 
-case class ReserveSeat(screenId: String, imdbid: String)
+case class Reserve(screenId: String, imdbid: String)

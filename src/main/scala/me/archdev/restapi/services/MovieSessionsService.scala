@@ -1,11 +1,11 @@
 package me.archdev.restapi.services
 
 import me.archdev.restapi.models.db.MovieSessionTable
-import me.archdev.restapi.models.{ MovieSession, MovieSessionRequest }
+import me.archdev.restapi.models.{ MovieSession, MovieSessionRequest, MovieSessionResponse }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import me.archdev.restapi.models.ReserveSeat
+import me.archdev.restapi.models.Reserve
 
 object MovieSessionsService extends MovieSessionsService
 
@@ -15,12 +15,15 @@ trait MovieSessionsService extends MovieSessionTable {
 
   def getSessions(movieId: String): Future[Seq[MovieSession]] = db.run(movieSessions.filter(_.imdbid === movieId).result)
 
-  def getMovieSessionById(screenId: String): Future[Option[MovieSession]] = db.run(movieSessions.filter(_.screenId === screenId).result.headOption)
+  def getMovieSessionBy(screenId: String, imdbid: String): Future[Option[MovieSession]] = 
+    db.run(movieSessions.filter(m => m.screenId === screenId && m.imdbid === imdbid).result.headOption)
+  
+  def getMovieSessionBy(reserve: Reserve): Future[Option[MovieSession]] = db.run(movieSessions.filter(m => m.screenId === reserve.screenId && m.imdbid === reserve.imdbid).result.headOption)
 
   def createMovieSession(movie: MovieSession): Future[MovieSession] = 
     db.run(movieSessions returning movieSessions += movie)
   
-  def reserveSeat(reserve: ReserveSeat): Future[Option[MovieSession]] = getMovieSessionById(reserve.screenId).flatMap {
+  def reserveSeat(reserve: Reserve): Future[Option[MovieSession]] = getMovieSessionBy(reserve).flatMap {
     case Some(session) =>
       if(session.thereIsAvailableSeat) {
         val sessionUpdated = session.copy(reservedSeats = session.reservedSeats + 1)
@@ -29,5 +32,15 @@ trait MovieSessionsService extends MovieSessionTable {
         Future.successful(None)
       }
     case None => Future.successful(None)
+  }
+  
+  def getMovieSessionsBy(screenId: String, imdbid: String): Future[Option[MovieSessionResponse]] = { 
+    val result = db.run(
+        (for ((movie, sessions) <- movies join movieSessions if movie.imdbid === imdbid && sessions.screenId === screenId) 
+          yield (movie, sessions)).result.headOption)
+    
+    result.map ( _.map { 
+      case (movie, session) => MovieSessionResponse(session.screenId, movie.imdbid, movie.title, session.availableSeats, session.reservedSeats)
+    })
   }
 }
