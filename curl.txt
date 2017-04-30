@@ -1,0 +1,7 @@
+curl http://localhost:9000/v1/movies/
+
+curl --data '{"imdbid": "2a", "title": "Kinag Kong"}' --header "Content-Type: application/js" http://localhost:9000/v1/movies/
+
+
+curl http://localhost:9000/v1/movies/1/sessions
+curl --data '{"screenId": "1", "imdbid": "3", "availableSeats": 10}' --header "Content-Type: application/json" http://localhost:9000/v1/movies/1/sessions
