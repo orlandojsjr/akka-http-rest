@@ -11,7 +11,17 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
-
+target
 # Scala-IDE specific
 .idea/
 rest.iml
+
+.cache-main
+.cache-tests
+.classpath
+.project
+.settings/
+.travis.yml
+README.md
+bin/
+project
