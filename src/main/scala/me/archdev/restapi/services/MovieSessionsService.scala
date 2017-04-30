@@ -15,19 +15,17 @@ trait MovieSessionsService extends MovieSessionTable {
 
   def getSessions(movieId: String): Future[Seq[MovieSession]] = db.run(movieSessions.filter(_.imdbid === movieId).result)
 
-  def getMovieSessionBy(screenId: String, imdbid: String): Future[Option[MovieSession]] = 
-    db.run(movieSessions.filter(m => m.screenId === screenId && m.imdbid === imdbid).result.headOption)
-  
-  def getMovieSessionBy(reserve: Reserve): Future[Option[MovieSession]] = db.run(movieSessions.filter(m => m.screenId === reserve.screenId && m.imdbid === reserve.imdbid).result.headOption)
+  def getMovieSessionsBy(reserve: Reserve): Future[Option[MovieSession]] = db.run(movieSessions.filter(m => m.screenId === reserve.screenId && m.imdbid === reserve.imdbid).result.headOption)
 
   def createMovieSession(movie: MovieSession): Future[MovieSession] = 
     db.run(movieSessions returning movieSessions += movie)
   
-  def reserveSeat(reserve: Reserve): Future[Option[MovieSession]] = getMovieSessionBy(reserve).flatMap {
+  def reserveSeat(reserve: Reserve): Future[Option[MovieSessionResponse]] = getMovieSessionsBy(reserve).flatMap {
     case Some(session) =>
       if(session.thereIsAvailableSeat) {
         val sessionUpdated = session.copy(reservedSeats = session.reservedSeats + 1)
-        db.run(movieSessions.filter(_.screenId === reserve.screenId).update(sessionUpdated)).map(_ => Some(sessionUpdated))  
+        db.run(movieSessions.filter(s => s.screenId === reserve.screenId && s.imdbid === reserve.imdbid).update(sessionUpdated)).map(_ => Some(sessionUpdated))  
+        getMovieSessionsBy(reserve.screenId, reserve.imdbid)
       } else {
         Future.successful(None)
       }

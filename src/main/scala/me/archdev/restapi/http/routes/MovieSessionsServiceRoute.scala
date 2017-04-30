@@ -32,7 +32,7 @@ trait MovieSessionsServiceRoute extends MovieSessionsService with BaseServiceRou
           pathEndOrSingleSlash { 
             post {
               entity(as[Reserve]) { reserve =>
-                complete(reserveSeat(reserve).map(_.toJson))
+                complete(reserveSeat(reserve))
               }
             }
           }
