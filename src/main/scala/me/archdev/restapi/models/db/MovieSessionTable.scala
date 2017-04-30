@@ -9,12 +9,13 @@ trait MovieSessionTable extends DatabaseConfig {
   import driver.api._
 
   class MovieSessions(tag: Tag) extends Table[MovieSession](tag, "movie_sessions") {
-    def screenId = column[String]("screen_id", O.PrimaryKey)
+    def id = column[Option[Long]]("id", O.PrimaryKey, O.AutoInc)
+    def screenId = column[String]("screen_id")
     def imdbid = column[String]("imdbid")
     def availableSeats = column[Long]("available_seats")
     def reservedSeats = column[Long]("reserved_seats")
 
-    def * = (screenId, imdbid, availableSeats, reservedSeats) <> ((MovieSession.apply _).tupled, MovieSession.unapply)
+    def * = (id, screenId, imdbid, availableSeats, reservedSeats) <> ((MovieSession.apply _).tupled, MovieSession.unapply)
   }
 
   protected val movieSessions = TableQuery[MovieSessions]

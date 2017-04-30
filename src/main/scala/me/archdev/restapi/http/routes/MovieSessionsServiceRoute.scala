@@ -20,7 +20,7 @@ trait MovieSessionsServiceRoute extends MovieSessionsService with BaseServiceRou
       } ~
         post {
            entity(as[MovieSessionRequest]) { session =>
-             complete(createMovieSession(MovieSession(session.screenId, session.imdbid, session.availableSeats)).map(_.toJson))
+             complete(createMovieSession(MovieSession(None, session.screenId, session.imdbid, session.availableSeats)).map(_.toJson))
            }
         } 
     } ~ 

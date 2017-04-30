@@ -1,9 +1,8 @@
-	curl http://localhost:9000/v1/movies/
-
-curl --data '{"imdbid": "2aa", "title": "Velozes"}' --header "Content-Type: application/json" http://localhost:9000/v1/movies/
+curl http://localhost:9000/v1/movies/
+curl --data '{"imdbid": "tt0111161", "title": "The Shawshank Redemption"}' --header "Content-Type: application/json" http://localhost:9000/v1/movies/
 
 
 curl http://localhost:9000/v1/movies/1/sessions
-	curl --data '{"screenId": "2", "imdbid": "2aa", "availableSeats": 5}' --header "Content-Type: application/json" http://localhost:9000/v1/movies/2aa/sessions
+curl --data '{"screenId": "screen_123456", "imdbid": "tt0111161", "availableSeats": 5}' --header "Content-Type: application/json" http://localhost:9000/v1/movies/2aa/sessions
 
-curl --data '{"screenId": "2", "imdbid": "2aa"}' --header "Content-Type: application/json" http://localhost:9000/v1/movies/2aa/sessions/2/reservation
+curl --data '{"screenId": "screen_123456", "imdbid": "tt0111161"}' --header "Content-Type: application/json" http://localhost:9000/v1/movies/2aa/sessions/2/reservation

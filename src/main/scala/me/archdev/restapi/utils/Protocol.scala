@@ -6,7 +6,7 @@ import spray.json.DefaultJsonProtocol
 trait Protocol extends DefaultJsonProtocol {
   implicit val usersFormat = jsonFormat3(UserEntity)
   implicit val tokenFormat = jsonFormat3(TokenEntity)
-  implicit val movieSessionFormat = jsonFormat4(MovieSession)
+  implicit val movieSessionFormat = jsonFormat5(MovieSession)
   implicit val movieSessionRequestFormat = jsonFormat3(MovieSessionRequest)
   implicit val movieFormat = jsonFormat2(Movie)
   implicit val reserveSeatFormat = jsonFormat2(ReserveSeat)
