@@ -3,6 +3,7 @@ package me.archdev.restapi.http.routes
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.PathMatchers.IntNumber
+import akka.http.scaladsl.server.PathMatchers.Segments
 import me.archdev.restapi.http.SecurityDirectives
 import me.archdev.restapi.models.{ UserEntityUpdate, UserEntity }
 import me.archdev.restapi.services.UsersService
