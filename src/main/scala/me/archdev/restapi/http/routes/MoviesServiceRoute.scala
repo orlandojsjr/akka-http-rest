@@ -20,17 +20,25 @@ trait MoviesServiceRoute extends MoviesService with BaseServiceRoute {
       } ~
         post {
            entity(as[Movie]) { movie =>
-             complete(createMovie(movie).map(_.toJson))
+             complete(Created -> createMovie(movie).map(_.toJson))
            }
         } 
     } ~ 
-    pathPrefix("[a-zA-Z0-9]*".r) { id =>
+    pathPrefix(Segment) { id =>
       pathEndOrSingleSlash { 
           get {
-            rejectEmptyResponse {
               complete(getMovieById(id))
-            }
-          }
+          } ~
+            put {
+              entity(as[Movie]) { movie =>
+                complete(updateMovie(id, movie).map(_.toJson))
+              }
+            } ~
+              delete {
+                 onSuccess(deleteMovie(id)) { ignored =>
+                    complete(NoContent)
+                  }
+              }
       }
     }
   } 
